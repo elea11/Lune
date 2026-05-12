@@ -230,4 +230,5 @@
     <string name="onboarding_feature_mix">Crossfade y Automix</string>
     <string name="onboarding_feature_more">Y mucho más…</string>
     <string name="onboarding_finish_button">Finalizar</string>
+    <string name="onboarding_skip_button">Omitir por ahora</string>
 </resources>

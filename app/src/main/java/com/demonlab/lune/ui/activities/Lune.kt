@@ -238,23 +238,18 @@ class Lune : AppCompatActivity() {
             }
 
             // Permissions logic lifted
-            val permissionsToRequest = remember {
+            val essentialPermissions = remember {
                 val list = mutableListOf<String>()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     list.add(Manifest.permission.READ_MEDIA_AUDIO)
-                    list.add(Manifest.permission.POST_NOTIFICATIONS)
                 } else {
                     list.add(Manifest.permission.READ_EXTERNAL_STORAGE)
-                }
-                list.add(Manifest.permission.RECORD_AUDIO)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                    list.add(Manifest.permission.BLUETOOTH_CONNECT)
                 }
                 list
             }
 
             var hasPermission by remember {
-                mutableStateOf(permissionsToRequest.all { 
+                mutableStateOf(essentialPermissions.all { 
                     ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED 
                 })
             }
@@ -262,17 +257,25 @@ class Lune : AppCompatActivity() {
             val launcher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.RequestMultiplePermissions()
             ) { permissions ->
-                val granted = permissions.values.all { it }
+                val granted = essentialPermissions.all { permissions[it] == true }
                 hasPermission = granted
                 if (granted) musicViewModel.loadSongs()
-                else Toast.makeText(context, "Permissions required for full functionality", Toast.LENGTH_SHORT).show()
+                else Toast.makeText(context, context.getString(R.string.permission_required), Toast.LENGTH_SHORT).show()
+            }
+
+            val recordAudioLauncher = rememberLauncherForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { granted ->
+                if (granted) {
+                    playbackManager.startVisualizer()
+                }
             }
 
             LaunchedEffect(hasPermission) {
                 if (hasPermission) {
                     musicViewModel.loadSongs()
                 } else {
-                    launcher.launch(permissionsToRequest.toTypedArray())
+                    launcher.launch(essentialPermissions.toTypedArray())
                 }
             }
 
@@ -303,14 +306,11 @@ class Lune : AppCompatActivity() {
                 }
             }
             // Sync Visualizer when permission or playback state changes
-            LaunchedEffect(hasPermission, isPlaying) {
-                if (hasPermission && isPlaying) {
+            LaunchedEffect(isPlaying) {
+                val hasAudioPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+                if (hasAudioPermission && isPlaying) {
                     playbackManager.startVisualizer()
                 } else if (!isPlaying) {
-                     // Keep it running if it was already running? 
-                     // Actually PlaybackManager.play() starts it. 
-                     // But if we pause, we might want to stop it to save battery?
-                     // The user said "move to rhythm", so if paused, it should stop.
                      playbackManager.stopVisualizer()
                 }
             }
@@ -383,7 +383,8 @@ class Lune : AppCompatActivity() {
                     playbackManager = playbackManager,
                     onRefreshSongs = { musicViewModel.loadSongs() },
                     musicViewModel = musicViewModel,
-                    settingsManager = settingsManager
+                    settingsManager = settingsManager,
+                    onRequestAudioPermission = { recordAudioLauncher.launch(Manifest.permission.RECORD_AUDIO) }
                 )
 
             }
@@ -450,7 +451,8 @@ fun MainScreen(
     playbackManager: PlaybackManager,
     onRefreshSongs: () -> Unit,
     musicViewModel: com.demonlab.lune.ui.viewmodels.MusicViewModel,
-    settingsManager: SettingsManager
+    settingsManager: SettingsManager,
+    onRequestAudioPermission: () -> Unit
 ) {
     val context = LocalContext.current
     val sTabResume = stringResource(R.string.tab_resume)
@@ -1191,7 +1193,8 @@ fun MainScreen(
                     onShowLyrics = {
                         val intent = Intent(context, LyricsActivity::class.java)
                         context.startActivity(intent)
-                    }
+                    },
+                    onRequestAudioPermission = onRequestAudioPermission
                 )
             }
         }
@@ -2058,7 +2061,8 @@ fun FullPlayer(
     showWaveform: Boolean,
     onToggleWaveform: () -> Unit,
     visualizerData: FloatArray,
-    onShowLyrics: () -> Unit
+    onShowLyrics: () -> Unit,
+    onRequestAudioPermission: () -> Unit
 ) {
     val context = LocalContext.current
     val settingsManager = remember { SettingsManager.getInstance(context) }
@@ -2706,7 +2710,8 @@ fun FullPlayer(
         if (showVisualizerSettings) {
             VisualizerSettingsBottomSheet(
                 playbackManager = playbackManager,
-                onClose = { showVisualizerSettings = false }
+                onClose = { showVisualizerSettings = false },
+                onRequestPermission = onRequestAudioPermission
             )
         }
     }
@@ -3063,8 +3068,20 @@ fun PlayerOptionsBottomSheet(
 @Composable
 fun VisualizerSettingsBottomSheet(
     playbackManager: PlaybackManager,
-    onClose: () -> Unit
+    onClose: () -> Unit,
+    onRequestPermission: () -> Unit
 ) {
+    val context = LocalContext.current
+    fun toggleVisualizer(isFull: Boolean) {
+        val hasPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (!hasPermission) {
+            onRequestPermission()
+        } else {
+            if (isFull) playbackManager.toggleFullPlayerVisualizer()
+            else playbackManager.toggleMiniPlayerVisualizer()
+        }
+    }
+
     ModalBottomSheet(
         onDismissRequest = onClose,
         containerColor = MaterialTheme.colorScheme.surface,
@@ -3087,7 +3104,7 @@ fun VisualizerSettingsBottomSheet(
                 trailingContent = {
                     Switch(
                         checked = playbackManager.isFullPlayerVisualizerEnabled,
-                        onCheckedChange = { playbackManager.toggleFullPlayerVisualizer() },
+                        onCheckedChange = { toggleVisualizer(true) },
                         thumbContent = if (playbackManager.isFullPlayerVisualizerEnabled) {
                             {
                                 Icon(
@@ -3099,7 +3116,7 @@ fun VisualizerSettingsBottomSheet(
                         } else null
                     )
                 },
-                modifier = Modifier.clickable { playbackManager.toggleFullPlayerVisualizer() }
+                modifier = Modifier.clickable { toggleVisualizer(true) }
             )
 
             ListItem(
@@ -3107,7 +3124,7 @@ fun VisualizerSettingsBottomSheet(
                 trailingContent = {
                     Switch(
                         checked = playbackManager.isMiniPlayerVisualizerEnabled,
-                        onCheckedChange = { playbackManager.toggleMiniPlayerVisualizer() },
+                        onCheckedChange = { toggleVisualizer(false) },
                         thumbContent = if (playbackManager.isMiniPlayerVisualizerEnabled) {
                             {
                                 Icon(
@@ -3119,7 +3136,7 @@ fun VisualizerSettingsBottomSheet(
                         } else null
                     )
                 },
-                modifier = Modifier.clickable { playbackManager.toggleMiniPlayerVisualizer() }
+                modifier = Modifier.clickable { toggleVisualizer(false) }
             )
         }
     }

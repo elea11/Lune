@@ -288,6 +288,17 @@ fun PermissionStep(onNext: () -> Unit) {
                     }
                 }
             }
+
+            if (!isPermissionGranted) {
+                Spacer(modifier = Modifier.height(8.dp))
+                TextButton(onClick = onNext) {
+                    Text(
+                        text = stringResource(R.string.onboarding_skip_button),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
         }
     }
 }
@@ -412,6 +423,17 @@ fun BluetoothPermissionStep(onNext: () -> Unit) {
                             modifier = Modifier.size(20.dp)
                         )
                     }
+                }
+            }
+
+            if (!isPermissionGranted) {
+                Spacer(modifier = Modifier.height(8.dp))
+                TextButton(onClick = onNext) {
+                    Text(
+                        text = stringResource(R.string.onboarding_skip_button),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
         }
