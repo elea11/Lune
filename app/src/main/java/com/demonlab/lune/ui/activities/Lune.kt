@@ -1213,9 +1213,6 @@ fun MainScreen(
         exit = fadeOut() + slideOutVertically(targetOffsetY = { it / 2 }),
         modifier = Modifier.fillMaxSize()
     ) {
-        val albumsTabStr = stringResource(R.string.tab_albums)
-        val playlistsTabStr = stringResource(R.string.playlists)
-
         SearchScreen(
             viewModel = musicViewModel,
             allFolders = folders,
@@ -1230,12 +1227,12 @@ fun MainScreen(
             onNavigateToAlbum = { album ->
                 selectedAlbum = album
                 showSearchScreen = false
-                onSelectedFolderChange(albumsTabStr)
+                onSelectedFolderChange("ALBUMS")
             },
             onNavigateToPlaylist = { playlist ->
                 selectedPlaylist = playlist
                 showSearchScreen = false
-                onSelectedFolderChange(playlistsTabStr)
+                onSelectedFolderChange("PLAYLISTS")
             },
             onNavigateToFolder = { folder ->
                 onSelectedFolderChange(folder)
