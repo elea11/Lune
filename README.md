@@ -5,7 +5,7 @@
       <img src="https://img.shields.io/github/v/release/MrDemonc/Lune?style=for-the-badge&logo=android&label=Lune&color=blue" />
       <img src="https://img.shields.io/badge/Android-API%2024%2B-green?style=for-the-badge&logo=android&logoColor=white" />
       <img src="https://img.shields.io/badge/Kotlin-100%25-orange?style=for-the-badge&logo=kotlin&logoColor=white" /><br>
-      <a href="ttps://www.paypal.com/paypalme/TommyZambrano">
+      <a href="https://www.paypal.com/paypalme/TommyZambrano">
         <img src="https://img.shields.io/badge/PayPal-Donate-00457C?style=for-the-badge&logo=paypal&logoColor=white"/>
       </a>
       <a href="https://ko-fi.com/mrdemonc">
