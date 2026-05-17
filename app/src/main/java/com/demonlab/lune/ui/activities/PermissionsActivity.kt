@@ -61,8 +61,14 @@ class PermissionsActivity : ComponentActivity() {
                 2 -> true
                 else -> systemInDarkTheme
             }
+            val useCustomColors = settingsManager.useCustomColors
+            val customColorPalette = settingsManager.customColorPalette
 
-            LuneTheme(darkTheme = targetDarkTheme) {
+            LuneTheme(
+                darkTheme = targetDarkTheme,
+                useCustomColors = useCustomColors,
+                customColorPalette = customColorPalette
+            ) {
                 PermissionsScreen(onBack = { finish() })
             }
         }

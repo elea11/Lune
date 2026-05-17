@@ -116,6 +116,11 @@
     <string name="delete">Delete</string>
     <string name="custom_title">Custom Title</string>
     <string name="custom_title_desc">Change the main toolbar title</string>
+    <string name="customization">Customization</string>
+    <string name="customization_desc">Personalize the app style, title, and colors</string>
+    <string name="use_custom_colors">Use custom colors</string>
+    <string name="use_custom_colors_desc">Override dynamic color with pre-established colors</string>
+    <string name="color_palette">Color Palette</string>
     <string name="restore_default_title">Restore default</string>
     <string name="categories">Categories</string>
     <string name="edit_information">Edit Information</string>

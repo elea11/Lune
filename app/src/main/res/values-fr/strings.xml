@@ -116,6 +116,11 @@
     <string name="delete">Supprimer</string>
     <string name="custom_title">Titre personnalisé</string>
     <string name="custom_title_desc">Modifier le titre de la barre principale</string>
+    <string name="customization">Personnalisation</string>
+    <string name="customization_desc">Personnaliser le style, le titre et les couleurs de l’application</string>
+    <string name="use_custom_colors">Utiliser des couleurs personnalisées</string>
+    <string name="use_custom_colors_desc">Remplacer les couleurs dynamiques par des couleurs prédéfinies</string>
+    <string name="color_palette">Palette de couleurs</string>
     <string name="restore_default_title">Restaurer l’original</string>
     <string name="categories">Catégories</string>
     <string name="edit_information">Modifier les informations</string>

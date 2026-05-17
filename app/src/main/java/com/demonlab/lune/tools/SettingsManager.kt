@@ -135,6 +135,14 @@ class SettingsManager(context: Context) {
         get() = prefs.getString("music_folder_uri", null)
         set(value) = prefs.edit().putString("music_folder_uri", value).apply()
 
+    var useCustomColors: Boolean
+        get() = prefs.getBoolean("use_custom_colors", false)
+        set(value) = prefs.edit().putBoolean("use_custom_colors", value).apply()
+
+    var customColorPalette: Int
+        get() = prefs.getInt("custom_color_palette", 0)
+        set(value) = prefs.edit().putInt("custom_color_palette", value).apply()
+
     fun getPlaylistShuffle(playlistId: Long): Boolean {
         return prefs.getBoolean("shuffle_playlist_$playlistId", false)
     }

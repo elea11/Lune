@@ -39,6 +39,8 @@ import coil.compose.AsyncImage
 import com.demonlab.lune.tools.PlaybackManager
 import com.demonlab.lune.tools.Song
 import com.demonlab.lune.ui.theme.LuneTheme
+import androidx.compose.foundation.isSystemInDarkTheme
+import com.demonlab.lune.tools.SettingsManager
 import kotlinx.coroutines.delay
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,9 +51,24 @@ data class LyricsLine(val timeMs: Long, val text: String)
 class LyricsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val settingsManager = SettingsManager.getInstance(this)
         enableEdgeToEdge()
         setContent {
-            LuneTheme {
+            val themeMode = settingsManager.themeMode
+            val systemInDarkTheme = isSystemInDarkTheme()
+            val targetDarkTheme = when (themeMode) {
+                1 -> false
+                2 -> true
+                else -> systemInDarkTheme
+            }
+            val useCustomColors = settingsManager.useCustomColors
+            val customColorPalette = settingsManager.customColorPalette
+
+            LuneTheme(
+                darkTheme = targetDarkTheme,
+                useCustomColors = useCustomColors,
+                customColorPalette = customColorPalette
+            ) {
                 LyricsScreen(onBack = { finish() })
             }
         }

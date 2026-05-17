@@ -14,6 +14,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+import androidx.compose.ui.graphics.Color
+
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
@@ -24,26 +26,99 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
+)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+// Soft Predefined Color Palettes
+// 1. Sunset Peach
+private val SunsetPeachLight = lightColorScheme(
+    primary = Color(0xFFB04B38),
+    secondary = Color(0xFF775651),
+    tertiary = Color(0xFF705C2E)
+)
+private val SunsetPeachDark = darkColorScheme(
+    primary = Color(0xFFFFB4AA),
+    secondary = Color(0xFFE7BDB7),
+    tertiary = Color(0xFFDEC48C)
+)
+
+// 2. Sage Green
+private val SageGreenLight = lightColorScheme(
+    primary = Color(0xFF386B52),
+    secondary = Color(0xFF4F6354),
+    tertiary = Color(0xFF3C6472)
+)
+private val SageGreenDark = darkColorScheme(
+    primary = Color(0xFF9FD3B1),
+    secondary = Color(0xFFB7CCBA),
+    tertiary = Color(0xFFA3CDDC)
+)
+
+// 3. Ocean Breeze
+private val OceanBreezeLight = lightColorScheme(
+    primary = Color(0xFF2E6580),
+    secondary = Color(0xFF4F626E),
+    tertiary = Color(0xFF64597C)
+)
+private val OceanBreezeDark = darkColorScheme(
+    primary = Color(0xFF99CCEA),
+    secondary = Color(0xFFB7CAD6),
+    tertiary = Color(0xFFCEC2EC)
+)
+
+// 4. Lavender Mist
+private val LavenderMistLight = lightColorScheme(
+    primary = Color(0xFF6E568F),
+    secondary = Color(0xFF625B71),
+    tertiary = Color(0xFF7D5262)
+)
+private val LavenderMistDark = darkColorScheme(
+    primary = Color(0xFFD6BAFF),
+    secondary = Color(0xFFCCC2DC),
+    tertiary = Color(0xFFEFB8C9)
+)
+
+// 5. Warm Amber
+private val WarmAmberLight = lightColorScheme(
+    primary = Color(0xFF7F5700),
+    secondary = Color(0xFF6C5D47),
+    tertiary = Color(0xFF4F6548)
+)
+private val WarmAmberDark = darkColorScheme(
+    primary = Color(0xFFFCBC43),
+    secondary = Color(0xFFD7C4A7),
+    tertiary = Color(0xFFB7CDA6)
 )
 
 @Composable
 fun LuneTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
+    useCustomColors: Boolean = false,
+    customColorPalette: Int = 0,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
+        useCustomColors -> {
+            if (darkTheme) {
+                when (customColorPalette) {
+                    1 -> SunsetPeachDark
+                    2 -> SageGreenDark
+                    3 -> OceanBreezeDark
+                    4 -> LavenderMistDark
+                    5 -> WarmAmberDark
+                    else -> DarkColorScheme
+                }
+            } else {
+                when (customColorPalette) {
+                    1 -> SunsetPeachLight
+                    2 -> SageGreenLight
+                    3 -> OceanBreezeLight
+                    4 -> LavenderMistLight
+                    5 -> WarmAmberLight
+                    else -> LightColorScheme
+                }
+            }
+        }
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)

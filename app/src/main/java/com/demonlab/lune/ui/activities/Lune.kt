@@ -201,9 +201,15 @@ class Lune : AppCompatActivity() {
 
             // LIFTED STATES & LOGIC
             var showOnboarding by remember { mutableStateOf(settingsManager.isFirstRun) }
+            var useCustomColors by remember { mutableStateOf(settingsManager.useCustomColors) }
+            var customColorPalette by remember { mutableIntStateOf(settingsManager.customColorPalette) }
 
             if (showOnboarding) {
-                LuneTheme(darkTheme = isSystemInDarkTheme()) {
+                LuneTheme(
+                    darkTheme = isSystemInDarkTheme(),
+                    useCustomColors = useCustomColors,
+                    customColorPalette = customColorPalette
+                ) {
                     OnboardingScreen(onStartClick = {
                         settingsManager.isFirstRun = false
                         showOnboarding = false
@@ -282,9 +288,13 @@ class Lune : AppCompatActivity() {
             val lifecycleOwner = LocalLifecycleOwner.current
             DisposableEffect(lifecycleOwner) {
                 val observer = LifecycleEventObserver { _, event ->
-                    if (event == Lifecycle.Event.ON_RESUME && hasPermission) {
-                        musicViewModel.loadSongs()
-                        musicViewModel.loadPlaylists()
+                    if (event == Lifecycle.Event.ON_RESUME) {
+                        useCustomColors = settingsManager.useCustomColors
+                        customColorPalette = settingsManager.customColorPalette
+                        if (hasPermission) {
+                            musicViewModel.loadSongs()
+                            musicViewModel.loadPlaylists()
+                        }
                     }
                 }
                 lifecycleOwner.lifecycle.addObserver(observer)
@@ -353,7 +363,11 @@ class Lune : AppCompatActivity() {
                 else -> systemInDarkTheme // Auto
             }
 
-            LuneTheme(darkTheme = targetDarkTheme) {
+            LuneTheme(
+                darkTheme = targetDarkTheme,
+                useCustomColors = useCustomColors,
+                customColorPalette = customColorPalette
+            ) {
                 MainScreen(
                     themeMode = themeMode,
                     onThemeModeChange = { 

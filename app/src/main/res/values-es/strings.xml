@@ -116,6 +116,11 @@
     <string name="delete">Eliminar</string>
     <string name="custom_title">Título personalizado</string>
     <string name="custom_title_desc">Cambia el título de la barra principal</string>
+    <string name="customization">Personalización</string>
+    <string name="customization_desc">Personaliza el estilo de la app, el título y los colores</string>
+    <string name="use_custom_colors">Usar colores personalizados</string>
+    <string name="use_custom_colors_desc">Sobrescribe el color dinámico con colores preestablecidos</string>
+    <string name="color_palette">Paleta de colores</string>
     <string name="restore_default_title">Restaurar original</string>
     <string name="categories">Categorías</string>
     <string name="edit_information">Editar Información</string>
