@@ -49,13 +49,28 @@ class AboutActivity : ComponentActivity() {
                 2 -> true
                 else -> systemInDarkTheme
             }
-            val useCustomColors = settingsManager.useCustomColors
-            val customColorPalette = settingsManager.customColorPalette
+            var useCustomColors by remember { mutableStateOf(settingsManager.useCustomColors) }
+            var customColorPalette by remember { mutableIntStateOf(settingsManager.customColorPalette) }
+            var useAmoledPitchBlack by remember { mutableStateOf(settingsManager.useAmoledPitchBlack) }
+
+            val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+            DisposableEffect(lifecycleOwner) {
+                val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                    if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                        useCustomColors = settingsManager.useCustomColors
+                        customColorPalette = settingsManager.customColorPalette
+                        useAmoledPitchBlack = settingsManager.useAmoledPitchBlack
+                    }
+                }
+                lifecycleOwner.lifecycle.addObserver(observer)
+                onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+            }
 
             LuneTheme(
                 darkTheme = targetDarkTheme,
                 useCustomColors = useCustomColors,
-                customColorPalette = customColorPalette
+                customColorPalette = customColorPalette,
+                useAmoledPitchBlack = useAmoledPitchBlack
             ) {
                 AboutScreen()
             }

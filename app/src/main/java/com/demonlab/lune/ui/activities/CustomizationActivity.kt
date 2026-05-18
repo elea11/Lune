@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.demonlab.lune.R
+import androidx.compose.material.icons.filled.PhoneAndroid
 import com.demonlab.lune.tools.SettingsManager
 import com.demonlab.lune.ui.theme.LuneTheme
 
@@ -49,17 +50,20 @@ class CustomizationActivity : ComponentActivity() {
 
             var useCustomColors by remember { mutableStateOf(settingsManager.useCustomColors) }
             var customColorPalette by remember { mutableIntStateOf(settingsManager.customColorPalette) }
+            var useAmoledPitchBlack by remember { mutableStateOf(settingsManager.useAmoledPitchBlack) }
 
             LuneTheme(
                 darkTheme = targetDarkTheme,
                 useCustomColors = useCustomColors,
-                customColorPalette = customColorPalette
+                customColorPalette = customColorPalette,
+                useAmoledPitchBlack = useAmoledPitchBlack
             ) {
                 CustomizationScreen(
                     onBack = { finish() },
                     settingsManager = settingsManager,
                     useCustomColors = useCustomColors,
                     customColorPalette = customColorPalette,
+                    useAmoledPitchBlack = useAmoledPitchBlack,
                     onCustomColorsChanged = {
                         useCustomColors = it
                         settingsManager.useCustomColors = it
@@ -67,6 +71,10 @@ class CustomizationActivity : ComponentActivity() {
                     onPaletteChanged = {
                         customColorPalette = it
                         settingsManager.customColorPalette = it
+                    },
+                    onAmoledChanged = {
+                        useAmoledPitchBlack = it
+                        settingsManager.useAmoledPitchBlack = it
                     }
                 )
             }
@@ -81,8 +89,10 @@ fun CustomizationScreen(
     settingsManager: SettingsManager,
     useCustomColors: Boolean,
     customColorPalette: Int,
+    useAmoledPitchBlack: Boolean,
     onCustomColorsChanged: (Boolean) -> Unit,
-    onPaletteChanged: (Int) -> Unit
+    onPaletteChanged: (Int) -> Unit,
+    onAmoledChanged: (Boolean) -> Unit
 ) {
     var showCustomTitleDialog by remember { mutableStateOf(false) }
     var customTitle by remember { mutableStateOf(settingsManager.customTitle) }
@@ -185,7 +195,7 @@ fun CustomizationScreen(
                     headlineText = stringResource(R.string.use_custom_colors),
                     supportingText = stringResource(R.string.use_custom_colors_desc),
                     icon = Icons.Default.Palette,
-                    position = if (useCustomColors) SectionPosition.MIDDLE else SectionPosition.LAST,
+                    position = SectionPosition.MIDDLE,
                     trailingContent = {
                         Switch(
                             checked = useCustomColors,
@@ -206,7 +216,7 @@ fun CustomizationScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 1.dp),
-                        shape = RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp, bottomStart = 28.dp, bottomEnd = 28.dp),
+                        shape = RoundedCornerShape(4.dp),
                         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
                         tonalElevation = 1.dp
                     ) {
@@ -269,6 +279,26 @@ fun CustomizationScreen(
                         }
                     }
                 }
+
+                SettingsPreferenceItem(
+                    headlineText = stringResource(R.string.amoled_pitch_black),
+                    supportingText = stringResource(R.string.amoled_pitch_black_desc),
+                    icon = Icons.Default.PhoneAndroid,
+                    position = SectionPosition.LAST,
+                    trailingContent = {
+                        Switch(
+                            checked = useAmoledPitchBlack,
+                            onCheckedChange = onAmoledChanged,
+                            thumbContent = {
+                                Icon(
+                                    imageVector = if (useAmoledPitchBlack) Icons.Default.Check else Icons.Default.Close,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                                )
+                            }
+                        )
+                    }
+                )
             }
         }
     }

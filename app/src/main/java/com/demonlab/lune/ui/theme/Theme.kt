@@ -95,9 +95,10 @@ fun LuneTheme(
     dynamicColor: Boolean = true,
     useCustomColors: Boolean = false,
     customColorPalette: Int = 0,
+    useAmoledPitchBlack: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
+    val baseColorScheme = when {
         useCustomColors -> {
             if (darkTheme) {
                 when (customColorPalette) {
@@ -125,6 +126,17 @@ fun LuneTheme(
         }
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }
+
+    val colorScheme = if (darkTheme && useAmoledPitchBlack) {
+        baseColorScheme.copy(
+            background = Color.Black,
+            surface = Color.Black,
+            surfaceVariant = Color(0xFF121212),
+            secondaryContainer = Color(0xFF121212)
+        )
+    } else {
+        baseColorScheme
     }
 
     MaterialTheme(

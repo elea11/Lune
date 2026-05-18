@@ -120,6 +120,8 @@
     <string name="customization_desc">Personalize the app style, title, and colors</string>
     <string name="use_custom_colors">Use custom colors</string>
     <string name="use_custom_colors_desc">Override dynamic color with pre-established colors</string>
+    <string name="amoled_pitch_black">AMOLED Pitch Black</string>
+    <string name="amoled_pitch_black_desc">Use pitch black background in dark mode</string>
     <string name="color_palette">Color Palette</string>
     <string name="restore_default_title">Restore default</string>
     <string name="categories">Categories</string>

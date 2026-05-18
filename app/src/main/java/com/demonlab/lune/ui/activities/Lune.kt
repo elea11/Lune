@@ -203,12 +203,14 @@ class Lune : AppCompatActivity() {
             var showOnboarding by remember { mutableStateOf(settingsManager.isFirstRun) }
             var useCustomColors by remember { mutableStateOf(settingsManager.useCustomColors) }
             var customColorPalette by remember { mutableIntStateOf(settingsManager.customColorPalette) }
+            var useAmoledPitchBlack by remember { mutableStateOf(settingsManager.useAmoledPitchBlack) }
 
             if (showOnboarding) {
                 LuneTheme(
                     darkTheme = isSystemInDarkTheme(),
                     useCustomColors = useCustomColors,
-                    customColorPalette = customColorPalette
+                    customColorPalette = customColorPalette,
+                    useAmoledPitchBlack = useAmoledPitchBlack
                 ) {
                     OnboardingScreen(onStartClick = {
                         settingsManager.isFirstRun = false
@@ -291,6 +293,7 @@ class Lune : AppCompatActivity() {
                     if (event == Lifecycle.Event.ON_RESUME) {
                         useCustomColors = settingsManager.useCustomColors
                         customColorPalette = settingsManager.customColorPalette
+                        useAmoledPitchBlack = settingsManager.useAmoledPitchBlack
                         if (hasPermission) {
                             musicViewModel.loadSongs()
                             musicViewModel.loadPlaylists()
@@ -366,7 +369,8 @@ class Lune : AppCompatActivity() {
             LuneTheme(
                 darkTheme = targetDarkTheme,
                 useCustomColors = useCustomColors,
-                customColorPalette = customColorPalette
+                customColorPalette = customColorPalette,
+                useAmoledPitchBlack = useAmoledPitchBlack
             ) {
                 MainScreen(
                     themeMode = themeMode,

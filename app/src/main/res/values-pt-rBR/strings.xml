@@ -120,6 +120,8 @@
     <string name="customization_desc">Personalize o estilo do app, título e cores</string>
     <string name="use_custom_colors">Usar cores personalizadas</string>
     <string name="use_custom_colors_desc">Substituir a cor dinâmica por cores preestabelecidas</string>
+    <string name="amoled_pitch_black">Tela AMOLED (Preto puro)</string>
+    <string name="amoled_pitch_black_desc">Usa fundo preto puro no modo escuro</string>
     <string name="color_palette">Paleta de Cores</string>
     <string name="restore_default_title">Restaurar padrão</string>
     <string name="categories">Categorias</string>

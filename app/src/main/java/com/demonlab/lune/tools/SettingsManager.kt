@@ -155,6 +155,10 @@ class SettingsManager(context: Context) {
         get() = prefs.getBoolean("show_backup_warning", true)
         set(value) = prefs.edit().putBoolean("show_backup_warning", value).apply()
 
+    var useAmoledPitchBlack: Boolean
+        get() = prefs.getBoolean("use_amoled_pitch_black", false)
+        set(value) = prefs.edit().putBoolean("use_amoled_pitch_black", value).apply()
+
     fun getPlaylistShuffle(playlistId: Long): Boolean {
         return prefs.getBoolean("shuffle_playlist_$playlistId", false)
     }

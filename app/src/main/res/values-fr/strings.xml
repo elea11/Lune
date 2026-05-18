@@ -120,6 +120,8 @@
     <string name="customization_desc">Personnaliser le style, le titre et les couleurs de l’application</string>
     <string name="use_custom_colors">Utiliser des couleurs personnalisées</string>
     <string name="use_custom_colors_desc">Remplacer les couleurs dynamiques par des couleurs prédéfinies</string>
+    <string name="amoled_pitch_black">Écran AMOLED (Noir pur)</string>
+    <string name="amoled_pitch_black_desc">Utilise un fond noir pur en mode sombre</string>
     <string name="color_palette">Palette de couleurs</string>
     <string name="restore_default_title">Restaurer l’original</string>
     <string name="categories">Catégories</string>

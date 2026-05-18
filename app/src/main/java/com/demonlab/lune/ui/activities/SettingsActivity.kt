@@ -70,6 +70,7 @@ class SettingsActivity : AppCompatActivity() {
             
             var useCustomColors by remember { mutableStateOf(settingsManager.useCustomColors) }
             var customColorPalette by remember { mutableIntStateOf(settingsManager.customColorPalette) }
+            var useAmoledPitchBlack by remember { mutableStateOf(settingsManager.useAmoledPitchBlack) }
             
             val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
             DisposableEffect(lifecycleOwner) {
@@ -77,6 +78,7 @@ class SettingsActivity : AppCompatActivity() {
                     if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
                         useCustomColors = settingsManager.useCustomColors
                         customColorPalette = settingsManager.customColorPalette
+                        useAmoledPitchBlack = settingsManager.useAmoledPitchBlack
                     }
                 }
                 lifecycleOwner.lifecycle.addObserver(observer)
@@ -86,7 +88,8 @@ class SettingsActivity : AppCompatActivity() {
             LuneTheme(
                 darkTheme = targetDarkTheme,
                 useCustomColors = useCustomColors,
-                customColorPalette = customColorPalette
+                customColorPalette = customColorPalette,
+                useAmoledPitchBlack = useAmoledPitchBlack
             ) {
                 SettingsScreen(
                     onBack = { finish() }
