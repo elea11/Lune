@@ -1330,6 +1330,7 @@ fun MainScreen(
                     onNext = playNext,
                     onPrevious = playPrevious,
                     onRefreshSongs = onRefreshSongs,
+                    onSyncFavorite = { songId, isFav -> musicViewModel.syncFavoriteStatusInMemory(songId, isFav) },
                     showWaveform = playbackManager.isFullPlayerVisualizerEnabled,
                     onToggleWaveform = {}, // Not used anymore as we have settings sheet
                     visualizerData = visualizerData,
@@ -2369,6 +2370,7 @@ fun FullPlayer(
     onNext: () -> Unit,
     onPrevious: () -> Unit,
     onRefreshSongs: (() -> Unit)? = null,
+    onSyncFavorite: ((Long, Boolean) -> Unit)? = null,
     showWaveform: Boolean,
     onToggleWaveform: () -> Unit,
     visualizerData: FloatArray,
@@ -2684,7 +2686,9 @@ fun FullPlayer(
                 Surface(
                     onClick = { 
                         playbackManager.toggleFavorite {
-                            onRefreshSongs?.invoke()
+                            playbackManager.currentSong?.let { song ->
+                                onSyncFavorite?.invoke(song.id, song.isFavorite)
+                            }
                         }
                     },
                     shape = CircleShape,
@@ -3038,6 +3042,7 @@ fun FullPlayer(
                 showWaveform = showWaveform,
                 onToggleWaveform = onToggleWaveform,
                 onRefreshSongs = onRefreshSongs,
+                onSyncFavorite = onSyncFavorite,
                 onDismiss = { showOptionsSheet = false },
                 onAddToPlaylistClick = { 
                     showOptionsSheet = false
@@ -3291,6 +3296,7 @@ fun PlayerOptionsBottomSheet(
     showWaveform: Boolean,
     onToggleWaveform: () -> Unit,
     onRefreshSongs: (() -> Unit)? = null,
+    onSyncFavorite: ((Long, Boolean) -> Unit)? = null,
     onDismiss: () -> Unit,
     onAddToPlaylistClick: () -> Unit,
     onShowVisualizerSettings: () -> Unit,
@@ -3329,7 +3335,9 @@ fun PlayerOptionsBottomSheet(
                     active = isFavorite,
                     onClick = { 
                         playbackManager.toggleFavorite {
-                            onRefreshSongs?.invoke() 
+                            playbackManager.currentSong?.let { song ->
+                                onSyncFavorite?.invoke(song.id, song.isFavorite)
+                            }
                         }
                     }
                 )

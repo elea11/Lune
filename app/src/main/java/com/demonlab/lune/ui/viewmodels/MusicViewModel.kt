@@ -101,8 +101,16 @@ class MusicViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val success = metadataManager.updateFavoriteStatus(song.id, !song.isFavorite)
             if (success) {
-                loadSongs()
+                allSongs = allSongs.map {
+                    if (it.id == song.id) it.copy(isFavorite = !song.isFavorite) else it
+                }
             }
+        }
+    }
+
+    fun syncFavoriteStatusInMemory(songId: Long, isFavorite: Boolean) {
+        allSongs = allSongs.map {
+            if (it.id == songId) it.copy(isFavorite = isFavorite) else it
         }
     }
 
