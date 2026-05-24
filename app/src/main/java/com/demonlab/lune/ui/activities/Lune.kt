@@ -2669,6 +2669,7 @@ fun FullPlayer(
     var showAddToPlaylistInPlayer by remember { mutableStateOf(false) }
     var showEqSheet by remember { mutableStateOf(false) }
     var showVolumeBar by remember { mutableStateOf(false) }
+    var showSpeedBar by remember { mutableStateOf(false) }
     var showVisualizerSettings by remember { mutableStateOf(false) }
     
     // Auto-hide volume bar after 5 seconds of inactivity
@@ -2676,6 +2677,14 @@ fun FullPlayer(
         if (showVolumeBar) {
             kotlinx.coroutines.delay(3000)
             showVolumeBar = false
+        }
+    }
+
+    // Auto-hide speed bar after 5 seconds of inactivity
+    LaunchedEffect(showSpeedBar) {
+        if (showSpeedBar) {
+            kotlinx.coroutines.delay(3000)
+            showSpeedBar = false
         }
     }
     val density = androidx.compose.ui.platform.LocalDensity.current
@@ -3169,12 +3178,12 @@ fun FullPlayer(
             Spacer(modifier = Modifier.width(16.dp))
 
             androidx.compose.animation.AnimatedContent(
-                targetState = showVolumeBar,
+                targetState = Pair(showVolumeBar, showSpeedBar),
                 transitionSpec = {
                     androidx.compose.animation.fadeIn() togetherWith androidx.compose.animation.fadeOut()
                 },
-                label = "VolumeBarTransition"
-            ) { isVolumeVisible ->
+                label = "BarsTransition"
+            ) { (isVolumeVisible, isSpeedVisible) ->
                 if (isVolumeVisible) {
                     var sliderValue by remember { mutableStateOf(playbackManager.currentVolumePercent) }
                     
@@ -3228,6 +3237,55 @@ fun FullPlayer(
                             )
                         }
                     }
+                } else if (isSpeedVisible) {
+                    var speedValue by remember { mutableStateOf(playbackManager.playbackSpeed) }
+                    
+                    LaunchedEffect(playbackManager.playbackSpeed) {
+                        speedValue = playbackManager.playbackSpeed
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        val speedSteps = listOf(0.25f, 0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f)
+                        
+                        Surface(
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(4.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                speedSteps.forEach { speedOption ->
+                                    val isSelected = Math.abs(speedOption - speedValue) < 0.05f
+                                    Surface(
+                                        onClick = {
+                                            speedValue = speedOption
+                                            playbackManager.updatePlaybackSpeed(speedOption)
+                                        },
+                                        shape = CircleShape,
+                                        color = if (isSelected) MaterialTheme.colorScheme.primary else androidx.compose.ui.graphics.Color.Transparent,
+                                        contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.weight(1f)
+                                    ) {
+                                        Text(
+                                            text = if (speedOption == 1.0f) "1x" else "${speedOption}x",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            textAlign = TextAlign.Center,
+                                            modifier = Modifier.padding(vertical = 8.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 } else {
                     val isVisible = remember { androidx.compose.animation.core.MutableTransitionState(false) }.apply { targetState = true }
                     
@@ -3274,30 +3332,11 @@ fun FullPlayer(
                                     modifier = Modifier.weight(1f)
                                 )
 
-                                // Share Button
+                                // Speed Button
                                 PlayerActionButton(
-                                    icon = Icons.Default.Share,
-                                    label = stringResource(R.string.option_share),
-                                    onClick = {
-                                        try {
-                                            val file = java.io.File(song.path)
-                                            if (file.exists()) {
-                                                val contentUri = FileProvider.getUriForFile(
-                                                    context,
-                                                    "com.demonlab.lune.fileprovider",
-                                                    file
-                                                )
-                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                                    type = "audio/*"
-                                                    putExtra(Intent.EXTRA_STREAM, contentUri)
-                                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                                }
-                                                context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.option_share)))
-                                            }
-                                        } catch (e: Exception) {
-                                            e.printStackTrace()
-                                        }
-                                    },
+                                    icon = Icons.Default.Speed,
+                                    label = stringResource(R.string.option_speed),
+                                    onClick = { showSpeedBar = true },
                                     shape = RoundedCornerShape(4.dp),
                                     modifier = Modifier.weight(1f)
                                 )
@@ -3405,13 +3444,18 @@ fun PlayerActionButton(
     label: String,
     onClick: () -> Unit,
     shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(16.dp),
+    isActive: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     // Detectamos si el esquema de la interfaz está en modo oscuro calculando la luminancia del color de fondo (Surface)
     val surfaceColor = MaterialTheme.colorScheme.surface
     val luma = surfaceColor.red * 0.299f + surfaceColor.green * 0.587f + surfaceColor.blue * 0.114f
     val isDark = luma < 0.5f
-    val bgColor = if (isDark) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primary
+    val bgColor = if (isActive) {
+        if (isDark) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.tertiary
+    } else {
+        if (isDark) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primary
+    }
 
     Surface(
         onClick = onClick,
@@ -3638,15 +3682,23 @@ fun PlayerOptionsBottomSheet(
                     .padding(horizontal = 8.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Favorite
+                val context = LocalContext.current
+                val song = playbackManager.currentSong
                 OptionButton(
-                    icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    label = stringResource(R.string.option_favorite),
-                    active = isFavorite,
-                    onClick = { 
-                        playbackManager.toggleFavorite {
-                            playbackManager.currentSong?.let { song ->
-                                onSyncFavorite?.invoke(song.id, song.isFavorite)
+                    icon = Icons.Default.Share,
+                    label = stringResource(R.string.option_share),
+                    active = false,
+                    onClick = {
+                        song?.let {
+                            try {
+                                val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "audio/*"
+                                    putExtra(android.content.Intent.EXTRA_STREAM, it.uri)
+                                    addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                }
+                                context.startActivity(android.content.Intent.createChooser(shareIntent, context.getString(R.string.option_share)))
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
                         }
                     }

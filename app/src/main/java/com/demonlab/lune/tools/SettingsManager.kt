@@ -211,6 +211,10 @@ class SettingsManager(context: Context) {
         get() = prefs.getInt("controls_color_palette", 0) // 0: Material You/App default, 1: Sunset Peach, 2: Sage Green, etc.
         set(value) = prefs.edit().putInt("controls_color_palette", value).apply()
 
+    var playbackSpeed: Float
+        get() = prefs.getFloat("playback_speed", 1.0f)
+        set(value) = prefs.edit().putFloat("playback_speed", value).apply()
+
     fun getPlaylistShuffle(playlistId: Long): Boolean {
         return prefs.getBoolean("shuffle_playlist_$playlistId", false)
     }

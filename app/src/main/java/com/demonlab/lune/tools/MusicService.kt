@@ -403,6 +403,16 @@ class MusicService : MediaBrowserServiceCompat() {
                 val sessionId = audioSessionId
                 setupAudioFx(sessionId, false)
                 setVolume(1f, 1f)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        val speed = PlaybackManager.getInstance(applicationContext).playbackSpeed
+                        if (speed != 1.0f) {
+                            val params = playbackParams
+                            params.speed = speed
+                            playbackParams = params
+                        }
+                    } catch (e: Exception) {}
+                }
                 updatePlaybackState()
 
                 // Load metadata/notifications AFTER starting for instant audio response
@@ -492,6 +502,19 @@ class MusicService : MediaBrowserServiceCompat() {
                 val sessionId = secondaryPlayer?.audioSessionId ?: 0
                 if (sessionId != 0) {
                     setupAudioFx(sessionId, true)
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    try {
+                        val speed = PlaybackManager.getInstance(applicationContext).playbackSpeed
+                        if (speed != 1.0f) {
+                            secondaryPlayer?.let {
+                                val params = it.playbackParams
+                                params.speed = speed
+                                it.playbackParams = params
+                            }
+                        }
+                    } catch (e: Exception) {}
                 }
 
                 secondaryPlayer?.start()
@@ -630,6 +653,29 @@ class MusicService : MediaBrowserServiceCompat() {
     fun currentPosition(): Int = mediaPlayer?.currentPosition ?: 0
     fun duration(): Int = mediaPlayer?.duration ?: 0
     fun getAudioSessionId(): Int = mediaPlayer?.audioSessionId ?: 0
+
+    fun setPlaybackSpeed(speed: Float) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                val wasPlaying = isPlaying()
+                mediaPlayer?.let {
+                    val params = it.playbackParams
+                    params.speed = speed
+                    it.playbackParams = params
+                    if (!wasPlaying) it.pause()
+                }
+                secondaryPlayer?.let {
+                    val params = it.playbackParams
+                    params.speed = speed
+                    it.playbackParams = params
+                    if (!wasPlaying) it.pause()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     fun seekTo(pos: Int) {
         mediaPlayer?.seekTo(pos)
         updatePlaybackState()

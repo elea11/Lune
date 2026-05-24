@@ -62,6 +62,9 @@ class PlaybackManager private constructor(private val context: Context) {
         private set
     var isSpatialAudioEnabled by mutableStateOf(settings.isSpatialAudioEnabled)
         private set
+
+    var playbackSpeed by mutableStateOf(settings.playbackSpeed)
+        private set
     var eqBandLevels by mutableStateOf(
         settings.eqBandLevels.split(",")
             .mapNotNull { it.toShortOrNull() }
@@ -797,6 +800,12 @@ class PlaybackManager private constructor(private val context: Context) {
             val position = (progress * it.duration()).toInt()
             it.seekTo(position)
         }
+    }
+
+    fun updatePlaybackSpeed(speed: Float) {
+        playbackSpeed = speed
+        settings.playbackSpeed = speed
+        musicService?.setPlaybackSpeed(speed)
     }
 
     fun getProgress(): Float {
