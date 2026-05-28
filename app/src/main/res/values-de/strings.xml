@@ -63,12 +63,12 @@
     <string name="most_played_desc">Meistgespielt</string>
     
     <!-- Accessibility / Icons -->
-    <string name="cd_menu">Menu</string>
-    <string name="cd_edit">Edit</string>
-    <string name="cd_previous">Previous</string>
-    <string name="cd_next">Next</string>
-    <string name="cd_back">Back</string>
-    <string name="cd_restore">Restore</string>
+    <string name="cd_menu">Menü</string>
+    <string name="cd_edit">Bearbeiten</string>
+    <string name="cd_previous">Vorheriger</string>
+    <string name="cd_next">Vor</string>
+    <string name="cd_back">Zurück</string>
+    <string name="cd_restore">Wiederherstellen</string>
     
     <!-- Other UI -->
     <string name="filter_folders">Filter Folders</string>
