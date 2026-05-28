@@ -1,66 +1,66 @@
 <resources>
     <string name="app_name">Lune</string>
-    <string name="settings">Settings</string>
-    <string name="about">About</string>
+    <string name="settings">Einstellungen</string>
+    <string name="about">Über</string>
     <string name="version">Version</string>
-    <string name="license">License</string>
-    <string name="author">Author</string>
-    <string name="hifi_audio">Hi-Fi Audio</string>
-    <string name="hifi_desc">Enable Hi-Fi detection and badges</string>
+    <string name="license">Lizenz</string>
+    <string name="author">Urheber</string>
+    <string name="hifi_audio">Hi-Fi-Audio</string>
+    <string name="hifi_desc">Hi-Fi-Erkennung und -Logo aktivieren</string>
 
-    <string name="general">General</string>
+    <string name="general">Generelles</string>
     <string name="cinematic_player">Cinematic Player</string>
-    <string name="cinematic_player_desc">Enables an immersive interface with moving cover art and smooth gradients.</string>
-    <string name="shortcut_playlists">Playlists</string>
-    <string name="backup">Backup</string>
-    <string name="security">Security</string>
+    <string name="cinematic_player_desc">Aktiviert eine immersive Oberfläche mit beweglichen Cover-Bild und weichen Übergängen.</string>
+    <string name="shortcut_playlists">Wiedergabelisten</string>
+    <string name="backup">Sicherung</string>
+    <string name="security">Sicherheit</string>
 
     <!-- UI/Player Strings -->
     <string name="eq_title">Equalizer</string>
-    <string name="eq_empty_hint">Play a song to configure the Equalizer</string>
+    <string name="eq_empty_hint">Spiele ein Lied ab, um den Equalizer zu konfigurieren</string>
     <string name="bass_label">BASS</string>
-    <string name="spatial_audio_label">Spatial Audio</string>
-    <string name="restore_defaults">Restore defaults</string>
-    <string name="disabled">Disabled</string>
-    <string name="open_queue">Open Queue</string>
+    <string name="spatial_audio_label">Raumklang</string>
+    <string name="restore_defaults">Standard wiederherstellen</string>
+    <string name="disabled">Deaktiviert</string>
+    <string name="open_queue">Warteschlange öffnen</string>
     
     <!-- EQ Bands -->
-    <string name="band_sub_bass">Sub Bass</string>
-    <string name="band_bass">Bass</string>
-    <string name="band_mid">Mid</string>
-    <string name="band_presence">Presence</string>
-    <string name="band_brilliance">Brilliance</string>
+    <string name="band_sub_bass">Subbässe</string>
+    <string name="band_bass">Bässe</string>
+    <string name="band_mid">Mitten</string>
+    <string name="band_presence">Präsenz</string>
+    <string name="band_brilliance">Brillianz</string>
 
     <!-- Metadata Editor -->
-    <string name="edit_title">Title</string>
-    <string name="edit_artist">Artist</string>
+    <string name="edit_title">Titel</string>
+    <string name="edit_artist">Interpret</string>
     <string name="edit_album">Album</string>
     <string name="edit_genre">Genre</string>
-    <string name="save_changes">Save Changes</string>
-    <string name="restore">Restore</string>
+    <string name="save_changes">Änderungen speichern</string>
+    <string name="restore">Zurücksetzen</string>
 
     <!-- Library Tabs -->
-    <string name="tab_resume">Resume</string>
-    <string name="resume_recommendations">Recommendations</string>
-    <string name="resume_top_playlists">Top Playlists</string>
-    <string name="resume_recently_added">Recently Added</string>
-    <string name="tab_all">All</string>
-    <string name="tab_favorites">Favorites</string>
-    <string name="tab_songs">Songs</string>
-    <string name="tab_albums">Artists</string>
+    <string name="tab_resume">Fortsetzen</string>
+    <string name="resume_recommendations">Empfehlungen</string>
+    <string name="resume_top_playlists">Lieblings-Wiedergabelisten</string>
+    <string name="resume_recently_added">Zuletzt hinzugefügt</string>
+    <string name="tab_all">Alle</string>
+    <string name="tab_favorites">Favoriten</string>
+    <string name="tab_songs">Titel</string>
+    <string name="tab_albums">Interpreten</string>
 
     <!-- Player Options -->
-    <string name="option_shuffle">Shuffle</string>
-    <string name="option_crossfade">Crossfade</string>
+    <string name="option_shuffle">Zufallswiedergabe</string>
+    <string name="option_crossfade">Überblenden</string>
     <string name="option_automix">Automix</string>
     <string name="option_timer">Timer</string>
-    <string name="option_lyrics">Lyrics</string>
-    <string name="transition_mixing">Mixing</string>
-    <string name="transition_crossfade">Crossfade</string>
-    <string name="unknown_artist">Unknown Artist</string>
-    <string name="unknown_album">Unknown Album</string>
-    <string name="unknown_song">Unknown Song</string>
-    <string name="most_played_desc">Most played</string>
+    <string name="option_lyrics">Liedtexte</string>
+    <string name="transition_mixing">Mischen</string>
+    <string name="transition_crossfade">Überblenden</string>
+    <string name="unknown_artist">Unbekannter Interpret</string>
+    <string name="unknown_album">Umbekanntes Album</string>
+    <string name="unknown_song">Unbekannter Titel</string>
+    <string name="most_played_desc">Meistgespielt</string>
     
     <!-- Accessibility / Icons -->
     <string name="cd_menu">Menu</string>
